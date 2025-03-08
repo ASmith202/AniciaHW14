@@ -1,7 +1,9 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const uri = process.env.MONGO_URI
+
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+
 async function connectDB() {
     try {
         // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
@@ -14,4 +16,5 @@ async function connectDB() {
         await mongoose.disconnect();
     }
 }
+
 module.exports = connectDB
