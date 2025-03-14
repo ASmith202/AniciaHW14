@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectDB } = require("./db"); // Import the connectDB function
+const { connectDB } = require("./db");  // Import the connectDB function
 const PORT = 3000;
 const mongoose = require("mongoose");
 const Shoe = require("./model/Shoe");
@@ -10,9 +10,11 @@ app.use(express.json());
 // GET route to access all shoes
 app.get("/shoes", async (req, res) => {
   try {
-    const shoes = await Shoe.find(); // Fetch all shoes from the database
+    console.log("Fetching all shoes...");
+    const shoes = await Shoe.find(); // Collect all shoes from the database
     res.status(200).json(shoes);
   } catch (error) {
+    console.log("Error fetching shoes:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -20,11 +22,13 @@ app.get("/shoes", async (req, res) => {
 // POST route to add a new shoe type
 app.post("/shoe", async (req, res) => {
   try {
-    const { type, color } = req.body; // Extract type and color from the request body
-    const newShoe = new Shoe({ type, color }); // Create a new shoe object
+    const { type, color, price, brand, size } = req.body; 
+    console.log("Adding a new shoe:", { type, color, price, brand, size });
+    const newShoe = new Shoe({ type, color, price, brand, size }); 
     await newShoe.save(); // Save the shoe to the database
     res.status(201).json(newShoe); // Respond with the created shoe
   } catch (error) {
+    console.log("Error adding shoe:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -32,10 +36,11 @@ app.post("/shoe", async (req, res) => {
 // PUT route to update a shoe by id
 app.put("/shoe/:id", async (req, res) => {
   try {
-    const { type, color } = req.body; // Extract type and color from request body
+    const { type, color, price, brand, size } = req.body; 
+    console.log(`Updating shoe with ID: ${req.params.id}`);
     const updatedShoe = await Shoe.findByIdAndUpdate(
       req.params.id, // Use the shoe id from the URL
-      { type, color }, // Update the type and color
+      { type, color, price, brand, size }, // Update the shoe fields
       { new: true } // Return the updated document
     );
 
@@ -45,6 +50,7 @@ app.put("/shoe/:id", async (req, res) => {
 
     res.status(200).json(updatedShoe); // Respond with the updated shoe
   } catch (error) {
+    console.log("Error updating shoe:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -60,6 +66,7 @@ app.delete("/shoe/:id", async (req, res) => {
 
     res.status(200).json({ message: "Shoe deleted successfully" }); // Confirm the deletion
   } catch (error) {
+    console.log("Error deleting shoe:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
@@ -67,6 +74,7 @@ app.delete("/shoe/:id", async (req, res) => {
 // Start the API and connect to the database
 async function startAPI() {
   try {
+    console.log("Attempting to connect to the database...");
     await connectDB(); // Wait for DB connection
     app.listen(PORT, () => {
       console.log(`Express server running at http://localhost:${PORT}`); // Start server after DB connection
