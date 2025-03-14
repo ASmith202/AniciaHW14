@@ -26,8 +26,7 @@ async function connectDB() {
         process.exit(1); // Exit the application if DB connection fails
     }
 }
-
-// Disconnect function in case you want to manually close the connection
+    // Disconnect function in case you want to manually close the connection
 async function disconnectDB() {
     try {
         await mongoose.disconnect();
@@ -36,5 +35,3 @@ async function disconnectDB() {
         console.error('Error disconnecting from MongoDB:', error.message);
     }
 }
-
-module.exports = { connectDB, disconnectDB };
